@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
-#include <locale.h>
-#include <math.h>
+#include <locale.h>                        c√≥digo com erro
+#include <math.h>                         
 
 int par,pag;
 
@@ -9,7 +9,7 @@ int main()
 {
 	setlocale (LC_ALL,"");
 	printf ("Um tabuleiro de xadrez tem 64 casas.\n");
-	printf ("Os gr„os iniciam em 1 e dobram a cada casa.");
+	printf ("Os gr√£os iniciam em 1 e dobram a cada casa.");
 	for ( par=1 ; par<=pow(2,15) ; par*2 );
 	printf ("%i", par);
 	pag=par+par*2;
@@ -17,6 +17,6 @@ int main()
 	 {printf (" + ");}
 	else
 	{printf (" = ");} 
-	printf ("O pagamento È de %i gr„os.", pag);
+	printf ("O pagamento √© de %i gr√£os.", pag);
 	getch();
 }
