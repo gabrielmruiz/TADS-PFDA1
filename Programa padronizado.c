@@ -4,75 +4,71 @@
  Limite de caractéres por linha: 125
  -------------------------------------------------------------*/
 
-/* Bibliotecas */
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
-/* Tipos de dados pré-definidos */
 typedef   struct 
-{   /* campos da estrutura */
+{ 
     int    	Codprod;
-    char   	Nomeprod[20+1]; /* 20 úteis mais o \0 = NULL TERMINATOR */
+    char   	Nomeprod[25+1]; 
     float	Custoprod;
-}  
-registro; 
+}produtagem;  
 
-/* Variáveis globais */
-registro      reg; /* Variável reg que é do tipo registro*/ 
-int pilocas = 0;
-/* Funções */
-void  cadastra_produtos (void) /* Cadastra o nome o valor e o código dos produtos */
+typedef struct 
+{   
+	int CodVenda;
+	int   CodProduto;
+    int   Qtde;
+} pedidos;
+
+produtagem    produ; 
+
+
+void  captura_produto (void)
 {
-	system ("cls");
-	printf ("\nCodigo do produto: 1"); /* FALTA gerar o código autonumérico */
-	reg.Codprod = 1;
+	system ("cls");	
+	produ.Codprod = system("CalculaQtdRegistrosArquivo") + 1;
+	printf ("\nCodigo do produto: "); 
+	printf ("%i", produ.Codprod);
 	printf ("\nDigite o nome do produto: "); 
-	fflush (stdin); 	gets(reg.Nomeprod); /* scanf  ("%s", &reg.Nomeprod); */
+	fflush (stdin); 	scanf ("%s", &produ.Nomeprod ); 
 	printf ("\nDigite o valor do produto R$: ");
-	fflush (stdin);     scanf  ("%f", &reg.Custoprod);
+	fflush (stdin);     scanf  ("%f", &produ.Custoprod);
 }
 
-void consulta_produtos (void)
+void gravar_produto (void)
 {
-	system ("cls");
-	printf ("\n================================================");
-	printf ("\n               CADASTRO DE PRODUTOS             ");
-	printf ("\n================================================");
-    printf ("\n   CODPROD      NOME               VALOR (R$)   ");	
-	printf ("\n================================================");
-	printf ("\n   %i\t\t%-20s\t%.2f" , 
-	              reg.Codprod, reg.Nomeprod, reg.Custoprod ) ;
-	printf ("\n================================================");
-    getch();	
+    FILE  *A; 
+    A  =  fopen ("PRODUTOS.DAT" , "a");	
+    if (A == NULL)
+    {
+    	printf("ERRO AO ABRIR O ARQUIVO PRODUTOS.DAT!");
+    	getch();
+    	exit(0);
+	}
+	fwrite ( &produ,  sizeof(produ), 1, A );
+	fclose (A);
 }
 
-void gera_lista_produtos (void)
-{
-    /* Variáveis locais da função */
-	FILE   * 	arq; /* arq se referencia ao arquivo que vai conter a lista [LISTAPROD.TXT]*/
-	/* Abrir o arquivo */
-	arq  =  fopen ("LISTAPROD.TXT" , "w"); /* modo "w" cria sempre o arquivo do zero */
-	/* Gravar o cabeçalho da lista */
-	fprintf ( arq, "\n================================================");
-	fprintf ( arq, "\n               CADASTRO DE PRODUTOS             ");
-	fprintf ( arq, "\n================================================");
-    fprintf ( arq, "\n   CODPROD      NOME               VALOR (R$)   ");	
-	fprintf ( arq, "\n================================================");
-	/* Gravar os dados do registro na lista */
-	fprintf ( arq, "\n%i\t\t%-20s\t%.2f", reg.Codprod, reg.Nomeprod, reg.Custoprod );
-	/* Grava o rodapé da lista */
-	fprintf ( arq, "\n================================================");
-	/* Fecha o arquivo */
-	fclose (arq);
-}
 
-/* Corpo do Programa */
 int main ()
 {
-    cadastra_produtos();	
-    consulta_produtos();
-    gera_lista_produtos();
-	return (0);
+	char sina;
+	
+	setlocale(LC_ALL, "");
+	system("cls");
+	printf("Deseja cadastrar um produto? [S/N]");
+	fflush(stdin);   scanf("%c", &sina);
+	
+	while (sina == 's' || sina == 'S'){
+	captura_produto();
+	gravar_produto();
+	printf ("\nDeseja cadastrar outro produto? [S/N]\n");
+	fflush(stdin);   scanf("%c", &sina);	
+	}
+	
+    return (0);
 }
